@@ -1,1 +1,2 @@
-gcc -g -O3 gen_source.c -o gensource
+all: gen_source.c
+	gcc -g gen_source.c -o gensourc
