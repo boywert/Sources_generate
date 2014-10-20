@@ -1,2 +1,2 @@
 all: gen_source.c
-	gcc -g gen_source.c -o gensourc
+	mpicc -g gen_source.c -o gensource

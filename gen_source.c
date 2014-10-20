@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "L-Galaxies.h"
-
+#include <mpi.h>
 
 int main(int argc, char **argv)
 {
@@ -43,13 +43,18 @@ int main(int argc, char **argv)
   float pi = 4.0*atan(1.0);
   double rho_crit_0;
   double gridmass_c; //to convert msun to gridmass
-  if(argc == 2)
-    sscanf(argv[1],"%d",&selected_snap);
-  if(argc == 5) {
-    sscanf(argv[2],"%s",basename);
-    sscanf(argv[3],"%s",outputfolder);
-    sscanf(argv[4],"%s",zlistfile);
+  int ThisTask, NTask;
+  MPI_Init(&argc, &argv);
+  MPI_Comm_rank(MPI_COMM_WORLD, &ThisTask);
+  MPI_Comm_size(MPI_COMM_WORLD, &NTask);
+
+  if(argc == 4) {
+    sscanf(argv[1],"%s",basename);
+    sscanf(argv[2],"%s",outputfolder);
+    sscanf(argv[3],"%s",zlistfile);
   }
+  else
+    exit(1);
   printf("argc = %d , argv[0] = %s, argv[1] = %s\n",argc,argv[0],argv[1]);
   sprintf(buff,"mkdir -p %s",outputfolder);
   system(buff);
@@ -70,12 +75,14 @@ int main(int argc, char **argv)
     i++;
   }
   nSnaps = i;
+  if(nSnaps > NTask) {
+    exit(1);
+  }
   fclose(fp);
+  selected_snap = ThisTask;
   printf("Total snapshot : %d\n",nSnaps);
   for(j=0;j<nSnaps;j++) {
-    if(argc == 1)
-      selected_snap = j;
-    if(j == selected_snap) {
+    if(ThisTask == j) {
       Sfr = calloc(grid*grid*grid,sizeof(double));
       for (i=firstfile;i<=lastfile;i++) {
 	sprintf(filename, "%s%s_%d",basename,zlist_string[j],i);
@@ -106,5 +113,7 @@ int main(int argc, char **argv)
       free(Sfr);	    
     }
   }
+  MPI_Barrier(MPI_COMM_WORLD);  
+  MPI_Finalize();
   return 0;
 }
