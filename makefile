@@ -1,0 +1,1 @@
+gcc -g -O3 gen_source.c -o gensource
