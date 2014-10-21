@@ -74,10 +74,11 @@ int main(int argc, char **argv)
   printf("Total snapshot : %d\n",nSnaps);
   for(j=0;j<nSnaps;j++) {
     if(j == selected_snap) {
+      printf("Converting snapshot : %d\n",selected_snap);
       Sfr = calloc(grid*grid*grid,sizeof(double));
       for (i=firstfile;i<=lastfile;i++) {
 	sprintf(filename, "%s%s_%d",basename,zlist_string[j],i);
-	printf("Reading %s\n",filename);
+	// printf("Reading %s\n",filename);
 	fp = fopen(filename,"rb");
 	fread(&dummy, sizeof(int), 1, fp);
 	fread(&nGals, sizeof(int),1, fp);
@@ -101,6 +102,7 @@ int main(int argc, char **argv)
 	fwrite(&write_buff,sizeof(float),1,fp);
       }
       fclose(fp);
+      printf("Finish converting snap :%d\n",selected_snap);
       free(Sfr);	    
     }
   }
