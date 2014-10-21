@@ -73,8 +73,6 @@ int main(int argc, char **argv)
   fclose(fp);
   printf("Total snapshot : %d\n",nSnaps);
   for(j=0;j<nSnaps;j++) {
-    if(argc == 1)
-      selected_snap = j;
     if(j == selected_snap) {
       Sfr = calloc(grid*grid*grid,sizeof(double));
       for (i=firstfile;i<=lastfile;i++) {
