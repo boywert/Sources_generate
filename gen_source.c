@@ -43,9 +43,9 @@ int main(int argc, char **argv)
   float pi = 4.0*atan(1.0);
   double rho_crit_0;
   double gridmass_c; //to convert msun to gridmass
-  if(argc == 2)
-    sscanf(argv[1],"%d",&selected_snap);
+   
   if(argc == 5) {
+    sscanf(argv[1],"%d",&selected_snap);
     sscanf(argv[2],"%s",basename);
     sscanf(argv[3],"%s",outputfolder);
     sscanf(argv[4],"%s",zlistfile);
