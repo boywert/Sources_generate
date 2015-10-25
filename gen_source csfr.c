@@ -100,25 +100,6 @@ int main(int argc, char **argv)
     if(j == selected_snap) {
       printf("Converting snapshot : %d\n",selected_snap);
       Sfr = calloc(grid*grid*grid,sizeof(double));
-      if(j > 0) {
-	sscanf(zlist_string[j],"%lg",&z1);
-	sscanf(zlist_string[j-1],"%lg",&z2);
-	dt = delta_t((float)z2,(float)z1,(float)omegam, H0, h);
-      } else
-	dt = 0.;
-      dt *= (Mpc2m/h/1000.)/year2sec;
-	// km/s / (Mpc/h)
-      // read the previous snapshot to make cumulative
-      /* if(j > 0) { */
-      /* 	sprintf(outputname,"%s/%s.dat",outputfolder,zlist_string[j-1]); */
-      /* 	sfr_float = malloc(grid*grid*grid*sizeof(float)); */
-      /* 	sp = fopen(outputname,"rb"); */
-      /* 	fread(sfr_float,sizeof(float),grid*grid*grid,sp); */
-      /* 	for(k=0;k<grid*grid*grid;k++) */
-      /* 	  Sfr[k] += (double)sfr_float[k]; */
-      /* 	fclose(sp); */
-      /* 	free(sfr_float); */
-      /* } */
       for (i=firstfile;i<=lastfile;i++) {
 	sprintf(filename, "%s%s_%d",basename,zlist_string[j],i);
 	if(i == firstfile || i == lastfile)
@@ -131,7 +112,7 @@ int main(int argc, char **argv)
 	fread(lgal,sizeof(struct LGalaxy),nGals,fp);
 	for(k=0;k<nGals;k++) {
 	  cell = (int)(lgal[k].Pos[0]/gridsize) + (int)(lgal[k].Pos[1]/gridsize)*grid + (int)(lgal[k].Pos[2]/gridsize)*grid*grid;
-	  Sfr[cell] += (double)(lgal[k].Sfr*gridmass_c*dt);
+	  Sfr[cell] += (double)(lgal[k].CumulativeSFR*1.e10*gridmass_c);
 	}
 	free(lgal);
 	fclose(fp);

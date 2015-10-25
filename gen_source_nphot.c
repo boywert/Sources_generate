@@ -63,6 +63,7 @@ int main(int argc, char **argv)
   double rho_crit_0;
   double gridmass_c; //to convert msun to gridmass
   double dt,z1,z2;
+  const double h_mass = 1.68705973e-24; // kg 
   if(argc == 6) {
     sscanf(argv[1],"%d",&selected_snap);
     sscanf(argv[2],"%s",basename);
@@ -106,19 +107,19 @@ int main(int argc, char **argv)
 	dt = delta_t((float)z2,(float)z1,(float)omegam, H0, h);
       } else
 	dt = 0.;
-      dt *= (Mpc2m/h/1000.)/year2sec;
+      dt *= (Mpc2m/h/1000.);
 	// km/s / (Mpc/h)
       // read the previous snapshot to make cumulative
-      /* if(j > 0) { */
-      /* 	sprintf(outputname,"%s/%s.dat",outputfolder,zlist_string[j-1]); */
-      /* 	sfr_float = malloc(grid*grid*grid*sizeof(float)); */
-      /* 	sp = fopen(outputname,"rb"); */
-      /* 	fread(sfr_float,sizeof(float),grid*grid*grid,sp); */
-      /* 	for(k=0;k<grid*grid*grid;k++) */
-      /* 	  Sfr[k] += (double)sfr_float[k]; */
-      /* 	fclose(sp); */
-      /* 	free(sfr_float); */
-      /* } */
+      if(j > 0) {
+      	sprintf(outputname,"%s/%s.dat",outputfolder,zlist_string[j-1]);
+      	sfr_float = malloc(grid*grid*grid*sizeof(float));
+      	sp = fopen(outputname,"rb");
+      	fread(sfr_float,sizeof(float),grid*grid*grid,sp);
+      	for(k=0;k<grid*grid*grid;k++)
+      	  Sfr[k] += (double)sfr_float[k];
+      	fclose(sp);
+      	free(sfr_float);
+      }
       for (i=firstfile;i<=lastfile;i++) {
 	sprintf(filename, "%s%s_%d",basename,zlist_string[j],i);
 	if(i == firstfile || i == lastfile)
@@ -131,7 +132,7 @@ int main(int argc, char **argv)
 	fread(lgal,sizeof(struct LGalaxy),nGals,fp);
 	for(k=0;k<nGals;k++) {
 	  cell = (int)(lgal[k].Pos[0]/gridsize) + (int)(lgal[k].Pos[1]/gridsize)*grid + (int)(lgal[k].Pos[2]/gridsize)*grid*grid;
-	  Sfr[cell] += (double)(lgal[k].Sfr*gridmass_c*dt);
+	  Sfr[cell] += (double)(pow((double)10.,(double)lgal[k].NPhotReion) *h_mass*kg2Msun*gridmass_c*dt);
 	}
 	free(lgal);
 	fclose(fp);
