@@ -21,8 +21,7 @@ double delta_t(float z_max, float z_min,float Om, float H0, float h) {
   return dt;
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
   struct LGalaxy *lgal;
   float write_buff;
   FILE *fp,*sp;
@@ -84,7 +83,7 @@ int main(int argc, char **argv)
   total_p = (double)cubep3m_p* (double)cubep3m_p* (double)cubep3m_p;
   total_cell = (double)cubep3m_cell*(double)cubep3m_cell*(double)cubep3m_cell;
   printf("total cell = %g\n",total_cell);
-  gridmass = (double)omegam*(double)rho_crit_0*(double)(boxsize*boxsize*boxsize)/total_cell; // /(double)h; // Msun
+  gridmass = (double)omegam*(double)rho_crit_0*(double)(boxsize*boxsize*boxsize)/total_cell; // /(double)h; // Msun/h
   printf("G = %g, gridmass = %lf\n",G,gridmass);
   gridmass_c = 1./gridmass;
   printf("gridmass_c = %lg\n",gridmass_c);
@@ -106,7 +105,7 @@ int main(int argc, char **argv)
 	dt = delta_t((float)z2,(float)z1,(float)omegam, H0, h);
       } else
 	dt = 0.;
-      dt *= (Mpc2m/h/1000.)/year2sec;
+      dt *= (Mpc2m/h/1000.);
 	// km/s / (Mpc/h)
       // read the previous snapshot to make cumulative
       /* if(j > 0) { */
@@ -131,7 +130,7 @@ int main(int argc, char **argv)
 	fread(lgal,sizeof(struct LGalaxy),nGals,fp);
 	for(k=0;k<nGals;k++) {
 	  cell = (int)(lgal[k].Pos[0]/gridsize) + (int)(lgal[k].Pos[1]/gridsize)*grid + (int)(lgal[k].Pos[2]/gridsize)*grid*grid;
-	  Sfr[cell] += (double)(lgal[k].Sfr*gridmass_c*dt);
+	  Sfr[cell] += (double)(lgal[k].HaloM_Crit200*1.e10*gridmass_c);
 	}
 	free(lgal);
 	fclose(fp);
