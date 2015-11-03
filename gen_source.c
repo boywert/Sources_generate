@@ -107,6 +107,7 @@ int main(int argc, char **argv)
       } else
 	dt = 0.;
       dt *= (Mpc2m/h/1000.)/year2sec;
+      printf("dt = %lg\n",dt);
 	// km/s / (Mpc/h)
       // read the previous snapshot to make cumulative
       /* if(j > 0) { */

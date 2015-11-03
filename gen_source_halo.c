@@ -105,19 +105,9 @@ int main(int argc, char **argv) {
 	dt = delta_t((float)z2,(float)z1,(float)omegam, H0, h);
       } else
 	dt = 0.;
-      dt *= (Mpc2m/h/1000.);
-	// km/s / (Mpc/h)
-      // read the previous snapshot to make cumulative
-      /* if(j > 0) { */
-      /* 	sprintf(outputname,"%s/%s.dat",outputfolder,zlist_string[j-1]); */
-      /* 	sfr_float = malloc(grid*grid*grid*sizeof(float)); */
-      /* 	sp = fopen(outputname,"rb"); */
-      /* 	fread(sfr_float,sizeof(float),grid*grid*grid,sp); */
-      /* 	for(k=0;k<grid*grid*grid;k++) */
-      /* 	  Sfr[k] += (double)sfr_float[k]; */
-      /* 	fclose(sp); */
-      /* 	free(sfr_float); */
-      /* } */
+      dt *= (Mpc2m/h/1000.); // s
+ 
+
       for (i=firstfile;i<=lastfile;i++) {
 	sprintf(filename, "%s%s_%d",basename,zlist_string[j],i);
 	if(i == firstfile || i == lastfile)
