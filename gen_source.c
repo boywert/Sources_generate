@@ -6,7 +6,7 @@
 float cal_H(float z, float H0, float Om) {
   return H0*sqrt(Om*(1.+z)*(1.+z)*(1.+z) + (1.-Om));
 }
-double delta_t(float z_max, float z_min,float Om, float H0, float h) {
+double delta_t(float z_max, float z_min,float Om, float H0) {
   int i,n = 100000;
   double dt,dz,F1,F2,z1,z2;
   dt = 0.;
@@ -14,8 +14,8 @@ double delta_t(float z_max, float z_min,float Om, float H0, float h) {
   for(i=0;i<n;i++) {
     z1 = z_min + dz*i;
     z2 = z1+dz;
-    F1 = 1./(1.+z1)/cal_H(z1,h*H0,Om);
-    F2 = 1./(1.+z2)/cal_H(z2,h*H0,Om);
+    F1 = 1./(1.+z1)/cal_H(z1,H0,Om);
+    F2 = 1./(1.+z2)/cal_H(z2,H0,Om);
     dt += 0.5*(F1+F2)*dz;
   }
   return dt;
@@ -103,7 +103,7 @@ int main(int argc, char **argv)
       if(j > 0) {
 	sscanf(zlist_string[j],"%lg",&z1);
 	sscanf(zlist_string[j-1],"%lg",&z2);
-	dt = delta_t((float)z2,(float)z1,(float)omegam, H0, h);
+	dt = delta_t((float)z2,(float)z1,(float)omegam, H0);
       } else
 	dt = 0.;
       dt *= (Mpc2m/h/1000.)/year2sec;
