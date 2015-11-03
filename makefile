@@ -1,4 +1,4 @@
-all: gen_source gen_source_nphot gen_source_halo
+all: gen_source gen_source_nphot gen_source_halo gen_source_csfr
 
 gen_source: gen_source.c
 	gcc -g gen_source.c -o gen_source -lm
