@@ -14,8 +14,8 @@ double delta_t(float z_max, float z_min,float Om, float H0, float h) {
   for(i=0;i<n;i++) {
     z1 = z_min + dz*i;
     z2 = z1+dz;
-    F1 = 1./(1.+z1)/cal_H(z1,H0,Om);
-    F2 = 1./(1.+z2)/cal_H(z2,H0,Om);
+    F1 = 1./(1.+z1)/cal_H(z1,h*H0,Om);
+    F2 = 1./(1.+z2)/cal_H(z2,h*H0,Om);
     dt += 0.5*(F1+F2)*dz;
   }
   return dt;
